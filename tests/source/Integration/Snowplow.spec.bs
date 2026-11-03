@@ -105,6 +105,27 @@ namespace tests
             end function)
         end sub
 
+        @it("reuses the tracker when initialized again with the same namespace")
+        sub reusesTrackerForSameNamespace()
+            m.global.snowplow.init = {
+                namespace: "ns1",
+                network: m.networkConfig
+            }
+            m.global.snowplow.init = {
+                namespace: "ns1",
+                network: m.networkConfig
+            }
+
+            m.global.snowplow.structured = {
+                se_ca: "category",
+                se_ac: "action"
+            }
+
+            m.assertMicroCounts(function(counts)
+                return counts.good = 1 and counts.bad = 0
+            end function)
+        end sub
+
         '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         @describe("Event tracking to Micro")
         '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

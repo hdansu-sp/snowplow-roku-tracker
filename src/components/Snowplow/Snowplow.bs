@@ -38,8 +38,12 @@ end sub
 sub initializeTracker()
     data = m.top.init
     trackerNamespace = getNamespaceFromData(data)
-    createTracker(trackerNamespace, data)
-    m.trackerNamespaces.push(trackerNamespace)
+    if m.top.hasField(trackerNamespace)
+        m.top[trackerNamespace].init = data
+    else
+        createTracker(trackerNamespace, data)
+        m.trackerNamespaces.push(trackerNamespace)
+    end if
 end sub
 
 ' Tracks a screen view event using all initialized trackers
