@@ -58,6 +58,11 @@ namespace Snowplow.Internal
             m.emitter.configuration = configuration
         end sub
 
+        sub setUserId(userId)
+            if userId <> invalid and userId = "" then userId = invalid
+            m.configuration.userId = userId
+        end sub
+
         sub trackMedia(data, port)
             media = data.media ?? data.video ?? data.audio
             version = data.version ?? 1

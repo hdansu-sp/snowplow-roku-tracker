@@ -136,6 +136,20 @@ m.global.snowplow.structured = {
 }
 ```
 
+To set or change the user ID after initialization, for example when the user logs in or switches accounts, set the `setUserId` property.
+The new user ID is added to all events tracked afterwards. Set it to an empty string to clear the user ID.
+
+```brs
+' Setting the user ID on all initialized trackers
+m.global.snowplow.setUserId = "user-123"
+
+' Setting the user ID on the tracker with the namespace "ns1"
+m.global.snowplow.ns1.setUserId = "user-123"
+
+' Clearing the user ID
+m.global.snowplow.setUserId = ""
+```
+
 To enable video tracking for a Video node, assign a `roAssociativeArray` with the video node to the `enableVideoTracking` property:
 
 ```brs

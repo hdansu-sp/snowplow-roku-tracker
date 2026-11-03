@@ -53,6 +53,26 @@ namespace tests
             m.assertEqual("c2", tracker.subject.configuration.collector)
         end sub
 
+        @it("sets and clears user ID for subsequent events")
+        sub setsUserId()
+            connection = new MockNetworkConnection()
+            configuration = new Snowplow.Internal.Configuration({ network: { collector: "c", method: "POST" } })
+            emitter = new Snowplow.Internal.Emitter(configuration, connection)
+            tracker = new Snowplow.Internal.Tracker(configuration, emitter)
+
+            tracker.setUserId("user1")
+            tracker.trackEvent(new Snowplow.Internal.Structured({ se_ca: "theCategory", se_ac: "theAction" }))
+            tracker.setUserId("user2")
+            tracker.trackEvent(new Snowplow.Internal.Structured({ se_ca: "theCategory", se_ac: "theAction" }))
+            tracker.setUserId("")
+            tracker.trackEvent(new Snowplow.Internal.Structured({ se_ca: "theCategory", se_ac: "theAction" }))
+
+            m.assertEqual(3, connection.requests.count())
+            m.assertEqual("user1", connection.requests[0].body.data[0].uid)
+            m.assertEqual("user2", connection.requests[1].body.data[0].uid)
+            m.assertInvalid(connection.requests[2].body.data[0].uid)
+        end sub
+
     end class
 
 end namespace
